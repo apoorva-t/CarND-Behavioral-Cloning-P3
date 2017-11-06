@@ -48,19 +48,19 @@ The model.py file contains the code for training and saving the convolution neur
 
 I have chosen to use the network architecture employed by the DAVE-2 project as described in the Nvidia paper 'End to End Learning for Self Driving Cars'.
 
-The model consists of 5 convolutional layers followed by 3 fully connected layers. The first 3 convolutional layers use a stride of 2x2 with filter size of 5x5 and 24 filters. The next 2 layers use a non-strided convolution with 3x3 filter sizes and depths between 32 and 128 (model.py lines 18-24) 
+The model consists of 5 convolutional layers followed by 3 fully connected layers. The first 3 convolutional layers use a stride of 2x2 with filter size of 5x5 and 24 filters. The next 2 layers use a non-strided convolution with 3x3 filter sizes and depths between 32 and 128 (model.py lines 88-104) 
 
-The model includes RELU layers to introduce nonlinearity after every stage except the last fully connected stage. The data is normalized in the model using a Keras lambda layer (code line 18). In order to reduce the data size and be in sync with the Nvidia architecture, the images are resized to 66x200 in a Keras lambda layer. Also, since the region of interest only lies in the part where the lane and its markings are, the images are cropped to remove the top 70 pixels and bottom 20 pixels.
+The model includes RELU layers to introduce nonlinearity after every stage except the last fully connected stage. The data is normalized in the model using a Keras lambda layer (code line 88). In order to reduce the data size and be in sync with the Nvidia architecture, the images are resized to 66x200 in a Keras lambda layer. Also, since the region of interest only lies in the part where the lane and its markings are, the images are cropped to remove the top 70 pixels and bottom 20 pixels.
 
 #### 2. Attempts to reduce overfitting in the model
 
-The model contains dropout layers after every fully connected layer (except the last one) in order to reduce overfitting (model.py lines 21). 
+The model contains dropout layers after every fully connected layer (except the last one) in order to reduce overfitting (model.py lines 99,101,103). 
 
-The model was trained and validated on different data sets to ensure that the model was not overfitting (code line 10-16). The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
+The model was trained and validated on different data sets to ensure that the model was not overfitting. The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
 
 #### 3. Model parameter tuning
 
-The model used an adam optimizer, so the learning rate was not tuned manually (model.py line 25). The default learning rate of 0.001 of the Adam optimizer proved to be good for training the model and there was no need for tuning the learning rate in later epochs.
+The model used an adam optimizer, so the learning rate was not tuned manually (model.py line 106). The default learning rate of 0.001 of the Adam optimizer proved to be good for training the model and there was no need for tuning the learning rate in later epochs.
 
 #### 4. Appropriate training data
 
@@ -86,7 +86,7 @@ At the end of the process, the vehicle is able to drive autonomously around the 
 
 After evaluating simulator runs with both the models, I found the model based on Nvidia network architecture more robust to changes in training data and to yield smoother turns. In fact, after adding data from track 2, my LeNet based model was failing on track1 too. I suspect this is because deeper layers in the Nvidia architecture help it detect features more accurately.
 
-The final model architecture (model.py lines 18-24) consisted of a convolution neural network with the following layers and layer sizes:
+The final model architecture (model.py lines 88-104) consisted of a convolution neural network with the following layers and layer sizes:
 
 | Layer         		|     Description	        					| 
 |:---------------------:|:---------------------------------------------:| 
@@ -118,12 +118,13 @@ The final model architecture (model.py lines 18-24) consisted of a convolution n
 Here is a visualization of the output for the first 2 convolutional layers:
 
 Input image:
+
 ![alt text][image5] 
-
 Convolutional Layer 1:
-![alt text][image1]
 
+![alt text][image1]
 Convolutional Layer 2:
+
 ![alt text][image6]
 
 #### 3. Creation of the Training Set & Training Process
@@ -133,6 +134,7 @@ To capture good driving behavior, I first recorded two laps on track one using c
 This is a histogram of the steering angles obtained from training data collected on track 1 from the center camera viewpoint:
 
 ![alt text][image3]
+
 As can be seen, the training data is biased towards driving straight as the number of samples with zero steering angle is much higher. 
 
 To get a more balanced set of steering angles so that the model can learn to navigate curves in the track, I also added images from the left and right camera views to the training/validation datasets. The steering angle was corrected by +/-0.18 (found by trial and error) from the center steering angle for the left/right views. 
@@ -140,6 +142,7 @@ To get a more balanced set of steering angles so that the model can learn to nav
 This is a view from the center, left and right cameras along with the corresponding steering angles for a particular frame during training:
 
 ![alt text][image2]
+
 Track 1 mostly has left turns, so in order to balance the data set I drove a lap in the reverse direction for data collection. 
 
 I then recorded the vehicle recovering from the left side and right sides of the road back to the center for a few curves so that the vehicle would learn how to correct its course if it happens to steer off the center of the track.
@@ -151,6 +154,7 @@ I then repeated this process on track two in order to get more data points. A su
 I tried to augment the training data by flipping the images horizontally and flipping the signs of the steering angles. However, this did not help and in fact, made the performance worse on track 2. So after this point, I stuck to the method of patching more training data for just the sharp curves and turns on steep slopes.
 
 After the collection process, I had 27135 number of data points. This is a histogram of the steering angles on my final training dataset:
+
 ![alt text][image4]
 
 I finally randomly shuffled the data set and put 20% of the data into a validation set. 
