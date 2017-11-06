@@ -15,7 +15,7 @@ The goals / steps of this project are the following:
 [image3]: ./examples/visual1.png "Histogram"
 [image4]: ./examples/data_hist.png "Final dataset"
 [image5]: ./examples/conv_ip.png "Input Image"
-[image6]: ./examples/comv2.png "Conv Layer 2"
+[image6]: ./examples/conv2.png "Conv Layer 2"
 
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
@@ -87,6 +87,7 @@ At the end of the process, the vehicle is able to drive autonomously around the 
 After evaluating simulator runs with both the models, I found the model based on Nvidia network architecture more robust to changes in training data and to yield smoother turns. In fact, after adding data from track 2, my LeNet based model was failing on track1 too. I suspect this is because deeper layers in the Nvidia architecture help it detect features more accurately.
 
 The final model architecture (model.py lines 18-24) consisted of a convolution neural network with the following layers and layer sizes:
+
 | Layer         		|     Description	        					| 
 |:---------------------:|:---------------------------------------------:| 
 | Input         		| 160x320x3 RGB image     					    | 
@@ -130,15 +131,15 @@ Convolutional Layer 2:
 To capture good driving behavior, I first recorded two laps on track one using center lane driving.
 
 This is a histogram of the steering angles obtained from training data collected on track 1 from the center camera viewpoint:
-![alt text][image3]
 
+![alt text][image3]
 As can be seen, the training data is biased towards driving straight as the number of samples with zero steering angle is much higher. 
 
 To get a more balanced set of steering angles so that the model can learn to navigate curves in the track, I also added images from the left and right camera views to the training/validation datasets. The steering angle was corrected by +/-0.18 (found by trial and error) from the center steering angle for the left/right views. 
 
 This is a view from the center, left and right cameras along with the corresponding steering angles for a particular frame during training:
-![alt text][image2]
 
+![alt text][image2]
 Track 1 mostly has left turns, so in order to balance the data set I drove a lap in the reverse direction for data collection. 
 
 I then recorded the vehicle recovering from the left side and right sides of the road back to the center for a few curves so that the vehicle would learn how to correct its course if it happens to steer off the center of the track.
